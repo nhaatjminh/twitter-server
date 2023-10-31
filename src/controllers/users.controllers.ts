@@ -6,6 +6,7 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { USERS_MESSAGES } from '~/constants/messages'
 import {
   EmailVerifyReqBody,
+  ForgotPasswordReqBody,
   LoginReqBody,
   LogoutRequestBody,
   RegisterReqBody,
@@ -79,5 +80,15 @@ export const resendVerifyEmailController = async (req: Request, res: Response) =
   }
 
   const result = await usersService.resendVerifyEmail(user_id)
+  return res.json(result)
+}
+
+export const forgotPasswordController = async (
+  req: Request<ParamsDictionary, any, ForgotPasswordReqBody>,
+  res: Response
+) => {
+  const { _id } = req.user as User
+  const result = await usersService.forgotPassword((_id as ObjectId).toString())
+
   return res.json(result)
 }
