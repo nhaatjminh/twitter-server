@@ -1,5 +1,5 @@
 const DB_COLLECTION = {
-  USER: 'user',
+  USER: 'users',
   REFRESH_TOKENS: 'refresh_tokens'
 }
 
