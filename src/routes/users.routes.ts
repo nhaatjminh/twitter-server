@@ -5,11 +5,13 @@ import {
   loginController,
   logoutController,
   registerController,
-  resendVerifyEmailController
+  resendVerifyEmailController,
+  verifyForgotPasswordController
 } from '~/controllers/users.controllers'
 import {
   accessTokenValidator,
   emailVerifyTokenValidator,
+  forgotPasswordTokenValidator,
   forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
@@ -67,5 +69,17 @@ usersRouter.post('/resend-verify-email', accessTokenValidator, requestHandlerWra
  * Body: { email: string }
  */
 usersRouter.post('/forgot-password', forgotPasswordValidator, requestHandlerWrapper(forgotPasswordController))
+
+/**
+ * Description. Verify link in email to reset password
+ * Path: /verify-forgot-password
+ * Method: POST
+ * Body: { forgot_password_token: string }
+ */
+usersRouter.post(
+  '/verify-forgot-password',
+  forgotPasswordTokenValidator,
+  requestHandlerWrapper(verifyForgotPasswordController)
+)
 
 export default usersRouter
