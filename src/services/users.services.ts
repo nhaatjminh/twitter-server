@@ -9,11 +9,12 @@ import { ObjectId } from 'mongodb'
 import { USERS_MESSAGES } from '~/constants/messages'
 
 class UsersService {
-  private signAccessToken(user_id: string) {
+  private signAccessToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     return signToken({
       payload: {
         user_id,
-        token_type: TokenType.AccessToken
+        token_type: TokenType.AccessToken,
+        verify
       },
       privateKey: process.env.JWT_SECRET_ACCESS_TOKEN as string,
       options: {
@@ -22,11 +23,12 @@ class UsersService {
     })
   }
 
-  private signRefreshToken(user_id: string) {
+  private signRefreshToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     return signToken({
       payload: {
         user_id,
-        token_type: TokenType.RefreshToken
+        token_type: TokenType.RefreshToken,
+        verify
       },
       privateKey: process.env.JWT_SECRET_REFRESH_TOKEN as string,
       options: {
@@ -61,8 +63,8 @@ class UsersService {
     })
   }
 
-  private signAccessTokenAndRefreshToken(user_id: string) {
-    return Promise.all([this.signAccessToken(user_id), this.signRefreshToken(user_id)])
+  private signAccessTokenAndRefreshToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
+    return Promise.all([this.signAccessToken({ user_id, verify }), this.signRefreshToken({ user_id, verify })])
   }
 
   async register(payload: RegisterReqBody) {
@@ -78,7 +80,10 @@ class UsersService {
       })
     )
 
-    const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken(user_id.toString())
+    const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken({
+      user_id: user_id.toString(),
+      verify: UserVerifyStatus.Unverified
+    })
     await databaseService.refreshTokens.insertOne(
       new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token } as any)
     )
@@ -94,8 +99,8 @@ class UsersService {
     return Boolean(user)
   }
 
-  async login(user_id: string) {
-    const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken(user_id)
+  async login({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
+    const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken({ user_id, verify })
     await databaseService.refreshTokens.insertOne(
       new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token } as any)
     )
@@ -112,9 +117,9 @@ class UsersService {
     }
   }
 
-  async verifyEmail(user_id: string) {
+  async verifyEmail({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     const [token] = await Promise.all([
-      this.signAccessTokenAndRefreshToken(user_id),
+      this.signAccessTokenAndRefreshToken({ user_id, verify }),
       databaseService.users.updateOne({ _id: new ObjectId(user_id) }, [
         {
           $set: {

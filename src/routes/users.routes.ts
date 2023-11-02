@@ -18,7 +18,8 @@ import {
   loginValidator,
   refreshTokenValidator,
   registerValidator,
-  resetPasswordValidator
+  resetPasswordValidator,
+  verifiedUserValidator
 } from '~/middlewares/users.middlewares'
 import { requestHandlerWrapper } from '~/utils/handlers'
 const usersRouter = Router()
@@ -100,5 +101,14 @@ usersRouter.post('/reset-password', resetPasswordValidator, requestHandlerWrappe
  * Header: { Authoriztion: Bearer <access_token> }
  */
 usersRouter.get('/me', accessTokenValidator, requestHandlerWrapper(getMeController))
+
+/**
+ * Description. Update my profile
+ * Path: /me
+ * Method: PATCH
+ * Header: { Authoriztion: Bearer <access_token> }
+ * Body: UserSchema
+ */
+usersRouter.patch('/me', accessTokenValidator, verifiedUserValidator, requestHandlerWrapper(getMeController))
 
 export default usersRouter
