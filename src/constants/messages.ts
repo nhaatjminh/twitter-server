@@ -44,7 +44,12 @@ export const USERS_MESSAGES = {
   LOCATION_LENGTH: 'Location length must be from 1 to 200',
   WEBSITE_MUST_BE_STRING: 'Website must be a string',
   WEBSITE_LENGTH: 'Website length must be from 1 to 200',
+  AVATAR_MUST_BE_STRING: 'avatar must be a string',
+  AVATAR_LENGTH: 'avatar length must be from 1 to 200',
+  COVER_PHOTO_MUST_BE_STRING: 'Cover photo must be a string',
+  COVER_PHOTO_LENGTH: 'Cover photo length must be from 1 to 200',
   USERNAME_MUST_BE_STRING: 'Username must be a string',
+  USERNAME_LENGTH: 'Website length must be from 1 to 50',
   USERNAME_INVALID:
     'Username must be 4-15 characters long and contain only letters, numbers, underscores, not only numbers',
   IMAGE_URL_MUST_BE_STRING: 'Avatar must be a string',
