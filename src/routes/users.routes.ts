@@ -17,6 +17,7 @@ import { filterMiddleWare } from '~/middlewares/common.middlewares'
 import {
   accessTokenValidator,
   emailVerifyTokenValidator,
+  followValidator,
   forgotPasswordTokenValidator,
   forgotPasswordValidator,
   loginValidator,
@@ -147,6 +148,12 @@ usersRouter.get('/:username', requestHandlerWrapper(getProfileController))
  * Header: { Authoriztion: Bearer <access_token> }
  * Body: { user_id: string }
  */
-usersRouter.post('/follow', accessTokenValidator, verifiedUserValidator, requestHandlerWrapper(followController))
+usersRouter.post(
+  '/follow',
+  accessTokenValidator,
+  verifiedUserValidator,
+  followValidator,
+  requestHandlerWrapper(followController)
+)
 
 export default usersRouter
