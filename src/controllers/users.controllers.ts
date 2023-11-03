@@ -19,7 +19,7 @@ import {
 import User from '~/models/schemas/User.schema'
 import databaseService from '~/services/database.services'
 import usersService from '~/services/users.services'
-import { pick } from '~/utils/common'
+import { FollowReqBody } from './../models/requests/User.requests'
 
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
   const user = req.user as User
@@ -144,5 +144,15 @@ export const updateMeController = async (req: Request<ParamsDictionary, any, Upd
   return res.json({
     message: USERS_MESSAGES.UPDATE_ME_SUCCESS,
     result: user
+  })
+}
+
+export const followController = async (req: Request<ParamsDictionary, any, FollowReqBody>, res: Response) => {
+  const { followed_user_id } = req.body
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const result = await usersService.follow(user_id, followed_user_id)
+  return res.json({
+    message: USERS_MESSAGES.FOLLOW_SUCCESS,
+    result: result
   })
 }

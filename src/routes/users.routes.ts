@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import {
   emailVerifyController,
+  followController,
   forgotPasswordController,
   getMeController,
   getProfileController,
@@ -138,5 +139,14 @@ usersRouter.patch(
  * Method: GET
  */
 usersRouter.get('/:username', requestHandlerWrapper(getProfileController))
+
+/**
+ * Description. Follow other user
+ * Path: /follow
+ * Method: POST
+ * Header: { Authoriztion: Bearer <access_token> }
+ * Body: { user_id: string }
+ */
+usersRouter.post('/follow', accessTokenValidator, verifiedUserValidator, requestHandlerWrapper(followController))
 
 export default usersRouter
