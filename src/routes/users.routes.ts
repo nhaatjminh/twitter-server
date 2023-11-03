@@ -3,6 +3,7 @@ import {
   emailVerifyController,
   forgotPasswordController,
   getMeController,
+  getProfileController,
   loginController,
   logoutController,
   registerController,
@@ -130,5 +131,12 @@ usersRouter.patch(
   ]),
   requestHandlerWrapper(updateMeController)
 )
+
+/**
+ * Description. Get user profile
+ * Path: /:username
+ * Method: GET
+ */
+usersRouter.get('/:username', requestHandlerWrapper(getProfileController))
 
 export default usersRouter
