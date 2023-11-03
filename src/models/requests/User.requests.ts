@@ -35,6 +35,12 @@ export interface ForgotPasswordReqBody {
   email: string
 }
 
+export interface ChangePasswordReqBody {
+  old_password: string
+  password: string
+  confirm_password: string
+}
+
 export interface VerifyForgotPasswordTokenReqBody {
   forgot_password_token: string
 }
