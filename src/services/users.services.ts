@@ -89,7 +89,7 @@ class UsersService {
       verify: UserVerifyStatus.Unverified
     })
     await databaseService.refreshTokens.insertOne(
-      new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token } as any)
+      new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token })
     )
 
     return {
@@ -106,7 +106,7 @@ class UsersService {
   async login({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
     const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken({ user_id, verify })
     await databaseService.refreshTokens.insertOne(
-      new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token } as any)
+      new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token })
     )
     return {
       access_token,
@@ -138,6 +138,9 @@ class UsersService {
       ])
     ])
     const [access_token, refresh_token] = token
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token })
+    )
     return {
       access_token,
       refresh_token
