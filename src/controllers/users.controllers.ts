@@ -34,6 +34,15 @@ export const loginController = async (req: Request<ParamsDictionary, any, LoginR
   })
 }
 
+export const oauthController = async (req: Request, res: Response) => {
+  const { code } = req.query
+  usersService.oauth(code as string)
+  return res.json({
+    message: USERS_MESSAGES.LOGIN_SUCCESS
+    // result
+  })
+}
+
 export const registerController = async (req: Request<ParamsDictionary, any, RegisterReqBody>, res: Response) => {
   const result = await usersService.register(req.body)
   return res.json({ message: USERS_MESSAGES.REGISTER_SUCCESS, result })
@@ -168,7 +177,7 @@ export const unfollowController = async (req: Request<UnfollowedReqParams>, res:
 
 export const changePasswordController = async (
   req: Request<ParamsDictionary, any, ChangePasswordReqBody>,
-  res: Response,
+  res: Response
 ) => {
   const { user_id } = req.decoded_authorization as TokenPayload
   const { password } = req.body

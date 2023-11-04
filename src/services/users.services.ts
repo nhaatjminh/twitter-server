@@ -10,6 +10,8 @@ import { USERS_MESSAGES } from '~/constants/messages'
 import { ErrorWithStatus } from '~/models/Errors'
 import HTTP_STATUS from '~/constants/httpStatus'
 import Follower from '~/models/schemas/Follower.schema'
+import axios from 'axios'
+import jwt from 'jsonwebtoken'
 
 class UsersService {
   private signAccessToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
@@ -101,6 +103,84 @@ class UsersService {
   async checkEmailExist(email: string) {
     const user = await databaseService.users.findOne({ email })
     return Boolean(user)
+  }
+
+  private async getOauthGoogleToken(code: string) {
+    const url = 'https://oauth2.googleapis.com/token'
+    const body = {
+      code,
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      client_secret: process.env.GOOGLE_CLIENT_SECRET,
+      redirect_uri: process.env.GOOGLE_REDIRECT_URI,
+      grant_type: 'authorization_code'
+    }
+
+    const { data } = await axios.post(url, body, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+
+    return data
+  }
+
+  async oauth(code: string) {
+    const { id_token, access_token } = await this.getOauthGoogleToken(code)
+    const userInfo = jwt.decode(id_token) as {
+      email: string
+      email_verified: boolean
+      name: string
+      picture: string
+      locale: string
+    }
+
+    if (!userInfo)
+      throw new ErrorWithStatus({
+        message: 'sth went wrong',
+        status: HTTP_STATUS.BAD_REQUEST
+      })
+    if (!userInfo.email_verified) {
+      throw new ErrorWithStatus({
+        message: USERS_MESSAGES.GMAIL_NOT_VERIFIED,
+        status: HTTP_STATUS.BAD_REQUEST
+      })
+    }
+
+    const user = await databaseService.users.findOne({ email: userInfo.email })
+    // if already exist, login user
+    if (user) {
+      const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken({
+        user_id: user._id.toString(),
+        verify: user.verify
+      })
+      await databaseService.refreshTokens.insertOne(new RefreshToken({ user_id: user._id, token: refresh_token }))
+      return {}
+    } else {
+      // else register new user
+      // await databaseService.users.insertOne(
+      //   new User({
+      //     ...payload,
+      //     _id: user_id,
+      //     username: `user${user_id.toString()}`,
+      //     email_verify_token: email_verify_token,
+      //     date_of_birth: new Date(payload.date_of_birth),
+      //     password: hashPassword(payload.password)
+      //   })
+      // )
+
+      // const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken({
+      //   user_id: user_id.toString(),
+      //   verify: UserVerifyStatus.Unverified
+      // })
+      // await databaseService.refreshTokens.insertOne(
+      //   new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token })
+      // )
+
+      // return {
+      //   access_token,
+      //   refresh_token
+      // }
+    }
   }
 
   async login({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
