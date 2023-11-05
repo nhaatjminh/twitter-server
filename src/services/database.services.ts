@@ -1,11 +1,9 @@
 import { MongoClient, Db, Collection } from 'mongodb'
-import { config } from 'dotenv'
 import User from '~/models/schemas/User.schema'
 import DB_COLLECTION from '~/constants/dbCollection'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import Follower from '~/models/schemas/Follower.schema'
 
-config()
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@twitter.9wcal9n.mongodb.net/?retryWrites=true&w=majority`
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version

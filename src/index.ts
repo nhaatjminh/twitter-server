@@ -1,3 +1,6 @@
+import { config } from 'dotenv'
+config()
+
 import express from 'express'
 import usersRouter from './routes/users.routes'
 import databaseService from './services/database.services'

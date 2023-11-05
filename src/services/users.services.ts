@@ -154,32 +154,30 @@ class UsersService {
         verify: user.verify
       })
       await databaseService.refreshTokens.insertOne(new RefreshToken({ user_id: user._id, token: refresh_token }))
-      return {}
+      return {
+        access_token,
+        refresh_token,
+        newUser: 0,
+        verify: user.verify
+      }
     } else {
       // else register new user
-      // await databaseService.users.insertOne(
-      //   new User({
-      //     ...payload,
-      //     _id: user_id,
-      //     username: `user${user_id.toString()}`,
-      //     email_verify_token: email_verify_token,
-      //     date_of_birth: new Date(payload.date_of_birth),
-      //     password: hashPassword(payload.password)
-      //   })
-      // )
+      // random string password
+      const password = Math.random().toString(36).substring(2, 15)
 
-      // const [access_token, refresh_token] = await this.signAccessTokenAndRefreshToken({
-      //   user_id: user_id.toString(),
-      //   verify: UserVerifyStatus.Unverified
-      // })
-      // await databaseService.refreshTokens.insertOne(
-      //   new RefreshToken({ user_id: new ObjectId(user_id), token: refresh_token })
-      // )
+      const data = await this.register({
+        email: userInfo.email,
+        name: userInfo.name,
+        date_of_birth: new Date().toISOString(),
+        password,
+        confirm_password: password
+      })
 
-      // return {
-      //   access_token,
-      //   refresh_token
-      // }
+      return {
+        ...data,
+        newUser: 1,
+        verify: UserVerifyStatus.Unverified
+      }
     }
   }
 
