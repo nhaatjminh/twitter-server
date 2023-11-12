@@ -11,7 +11,7 @@ import { initFolder } from './utils/files'
 databaseService.connect()
 
 const app = express()
-const port = 5000
+const port = process.env.PORT || 5000
 
 initFolder()
 
