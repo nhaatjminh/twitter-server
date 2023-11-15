@@ -2,12 +2,12 @@ import { config } from 'dotenv'
 config()
 
 import express from 'express'
-import usersRouter from './routes/users.routes'
 import databaseService from './services/database.services'
 import { defaultErrorHandler } from './middlewares/error.middlewares'
-import mediaRouter from './routes/media.routes'
 import { initFolder } from './utils/files'
-import { UPLOAD_DIR } from './constants/dir'
+import usersRouter from './routes/users.routes'
+import mediaRouter from './routes/media.routes'
+import staticRouter from './routes/static.routes'
 
 databaseService.connect()
 
@@ -20,7 +20,7 @@ app.use(express.json())
 
 app.use('/users', usersRouter)
 app.use('/media', mediaRouter)
-app.use('/static', express.static(UPLOAD_DIR))
+app.use('/static', staticRouter)
 
 app.use(defaultErrorHandler)
 
