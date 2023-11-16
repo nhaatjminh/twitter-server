@@ -19,6 +19,10 @@ export interface LogoutRequestBody {
   refresh_token: string
 }
 
+export interface RefreshTokenReqBody {
+  refresh_token: string
+}
+
 export interface EmailVerifyReqBody {
   email_verify_token: string
 }
@@ -54,7 +58,7 @@ export interface ResetPasswordReqBody {
 export interface TokenPayload extends JwtPayload {
   user_id: string
   token_type: TokenType
-  verified?: UserVerifyStatus
+  verified: UserVerifyStatus
 }
 
 export interface UpdateMeReqBody {
