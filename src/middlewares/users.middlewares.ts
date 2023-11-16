@@ -167,7 +167,6 @@ const imageSchema: ParamSchema = {
 const userIdSchema: ParamSchema = {
   custom: {
     options: async (value, { req }) => {
-      console.log(value)
       if (!ObjectId.isValid(value)) {
         throw new ErrorWithStatus({
           message: USERS_MESSAGES.INVALID_USER_ID,
