@@ -1,6 +1,8 @@
+import { randomUUID } from 'crypto'
 import { Request } from 'express'
 import formidable, { File } from 'formidable'
 import fs from 'fs'
+import path from 'path'
 import { UPLOAD_IMAGE_TEMP_DIR, UPLOAD_VIDEO_DIR, UPLOAD_VIDEO_TEMP_DIR } from '~/constants/dir'
 
 export const initFolder = () => {
@@ -44,8 +46,11 @@ export const handleUploadImage = async (req: Request) => {
 }
 
 export const handleUploadVideo = async (req: Request) => {
+  const id = randomUUID()
+  const folderPath = path.resolve(UPLOAD_VIDEO_DIR, id)
+  fs.mkdirSync(folderPath)
   const form = formidable({
-    uploadDir: UPLOAD_VIDEO_DIR,
+    uploadDir: folderPath,
     maxFiles: 1,
     maxFileSize: 50 * 1024 * 1024, // 50 MB
     filter: ({ name, originalFilename, mimetype }) => {
@@ -54,6 +59,9 @@ export const handleUploadVideo = async (req: Request) => {
         form.emit('error' as any, new Error('File type is not valid') as any)
       }
       return valid
+    },
+    filename: () => {
+      return id
     }
   })
 
@@ -71,6 +79,7 @@ export const handleUploadVideo = async (req: Request) => {
         const ext = getExtension(video.originalFilename as string)
         fs.renameSync(video.filepath, video.filepath + '.' + ext)
         video.newFilename = video.newFilename + '.' + ext
+        video.filepath = video.filepath + '.' + ext
       })
       resolve(files.video as File[])
     })
