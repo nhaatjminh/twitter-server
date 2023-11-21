@@ -9,6 +9,45 @@ import { MediaType } from '~/constants/enums'
 import { Media } from '~/models/Other'
 import { encodeHLSWithMultipleVideoStreams } from '~/utils/video'
 
+class Queue {
+  items: string[]
+  encoding: boolean
+  constructor() {
+    this.items = []
+    this.encoding = false
+  }
+
+  enqueue(item: string) {
+    this.items.push(item)
+    this.processEncode()
+  }
+
+  async processEncode() {
+    if (this.encoding) return
+    if (this.items.length) {
+      this.encoding = true
+      const videoPath = this.items[0]
+      try {
+        await encodeHLSWithMultipleVideoStreams(videoPath)
+        this.items.shift()
+        fs.unlink(videoPath, (err) => {
+          if (err) console.log(err)
+        })
+        console.error(`Encode video ${videoPath} success`)
+      } catch (error) {
+        console.error(`Encode video ${videoPath} error`)
+        console.error(error)
+      }
+      this.encoding = false
+      this.processEncode()
+    } else {
+      console.log('Encode video queue is empty')
+    }
+  }
+}
+
+const queue = new Queue()
+
 class MediaService {
   async handleUploadImage(req: Request) {
     const baseUrl = isProduction
@@ -55,10 +94,7 @@ class MediaService {
 
     const result: Media[] = await Promise.all(
       files.map(async (file) => {
-        await encodeHLSWithMultipleVideoStreams(file.filepath)
-        fs.unlink(file.filepath, (err) => {
-          if (err) console.log(err)
-        })
+        queue.enqueue(file.filepath)
         const newName = getFileName(file.newFilename)
         return {
           url: `${baseUrl}/${newName}`,
