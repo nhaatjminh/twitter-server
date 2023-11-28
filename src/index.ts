@@ -3,6 +3,7 @@ config()
 
 import express from 'express'
 import databaseService from './services/database.services'
+import '~/utils/s3'
 import { defaultErrorHandler } from './middlewares/error.middlewares'
 import { initFolder } from './utils/files'
 import usersRouter from './routes/users.routes'
