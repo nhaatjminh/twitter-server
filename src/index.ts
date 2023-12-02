@@ -12,7 +12,9 @@ import staticRouter from './routes/static.routes'
 import { UPLOAD_VIDEO_DIR } from './constants/dir'
 import cors from 'cors'
 
-databaseService.connect()
+databaseService.connect().then(() => {
+  databaseService.indexUsers()
+})
 
 const app = express()
 const port = process.env.PORT || 5000
