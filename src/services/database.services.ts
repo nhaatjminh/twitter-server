@@ -4,6 +4,7 @@ import DB_COLLECTION from '~/constants/dbCollection'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import Follower from '~/models/schemas/Follower.schema'
 import VideoStatus from '~/models/schemas/VideoStatus.schema'
+import Tweet from '~/models/schemas/Tweet.schema'
 
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@twitter.9wcal9n.mongodb.net/?retryWrites=true&w=majority`
 
@@ -61,6 +62,10 @@ class DatabaseService {
 
   get users(): Collection<User> {
     return this.db.collection(DB_COLLECTION.USER)
+  }
+
+  get tweets(): Collection<Tweet> {
+    return this.db.collection(DB_COLLECTION.TWEET)
   }
 
   get refreshTokens(): Collection<RefreshToken> {

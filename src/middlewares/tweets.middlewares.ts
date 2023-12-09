@@ -87,7 +87,7 @@ export const createTweetValidator = validate(
         }
       }
     },
-    medias: {
+    media: {
       isArray: true,
       custom: {
         options: (value, { req }) => {
