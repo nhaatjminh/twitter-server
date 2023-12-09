@@ -8,3 +8,7 @@ export const inclusivePick = <T extends object, K extends string | number | symb
 
 export const omit = <T extends object, K extends keyof T>(obj: T, keys: K[]) =>
   Object.fromEntries(Object.entries(obj).filter(([key]) => !keys.includes(key as K))) as Omit<T, K>
+
+export const enumToArray = (numberEnum: { [key: string]: string | number }) => {
+  return Object.values(numberEnum).filter((value) => typeof value === 'number') as number[]
+}

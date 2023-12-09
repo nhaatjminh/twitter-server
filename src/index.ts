@@ -8,6 +8,7 @@ import { defaultErrorHandler } from './middlewares/error.middlewares'
 import { initFolder } from './utils/files'
 import usersRouter from './routes/users.routes'
 import mediaRouter from './routes/media.routes'
+import tweetsRouter from './routes/tweets.routes'
 import staticRouter from './routes/static.routes'
 import { UPLOAD_VIDEO_DIR } from './constants/dir'
 import cors from 'cors'
@@ -29,6 +30,7 @@ app.use(cors())
 
 app.use('/users', usersRouter)
 app.use('/media', mediaRouter)
+app.use('/tweets', tweetsRouter)
 app.use('/static', staticRouter)
 app.use('/static/video', express.static(UPLOAD_VIDEO_DIR))
 
