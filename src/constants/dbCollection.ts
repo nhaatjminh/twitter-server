@@ -3,7 +3,8 @@ const DB_COLLECTION = {
   TWEET: 'tweets',
   REFRESH_TOKENS: 'refresh_tokens',
   FOLLOWERS: 'followers',
-  VIDEO_STATUS: 'video_status'
+  VIDEO_STATUS: 'video_status',
+  HASHTAGS: 'hashtags'
 }
 
 export default DB_COLLECTION

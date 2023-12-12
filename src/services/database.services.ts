@@ -5,6 +5,7 @@ import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import Follower from '~/models/schemas/Follower.schema'
 import VideoStatus from '~/models/schemas/VideoStatus.schema'
 import Tweet from '~/models/schemas/Tweet.schema'
+import Hashtag from '~/models/schemas/Hashtag.schema'
 
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@twitter.9wcal9n.mongodb.net/?retryWrites=true&w=majority`
 
@@ -78,6 +79,10 @@ class DatabaseService {
 
   get videoStatus(): Collection<VideoStatus> {
     return this.db.collection(DB_COLLECTION.VIDEO_STATUS)
+  }
+
+  get hashtags(): Collection<Hashtag> {
+    return this.db.collection(DB_COLLECTION.HASHTAGS)
   }
 }
 
