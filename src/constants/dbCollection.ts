@@ -4,7 +4,8 @@ const DB_COLLECTION = {
   REFRESH_TOKENS: 'refresh_tokens',
   FOLLOWERS: 'followers',
   VIDEO_STATUS: 'video_status',
-  HASHTAGS: 'hashtags'
+  HASHTAGS: 'hashtags',
+  BOOKMARKS: 'bookmarks'
 }
 
 export default DB_COLLECTION

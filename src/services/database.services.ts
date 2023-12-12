@@ -6,6 +6,7 @@ import Follower from '~/models/schemas/Follower.schema'
 import VideoStatus from '~/models/schemas/VideoStatus.schema'
 import Tweet from '~/models/schemas/Tweet.schema'
 import Hashtag from '~/models/schemas/Hashtag.schema'
+import Bookmark from '~/models/schemas/Bookmark.schema'
 
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@twitter.9wcal9n.mongodb.net/?retryWrites=true&w=majority`
 
@@ -83,6 +84,10 @@ class DatabaseService {
 
   get hashtags(): Collection<Hashtag> {
     return this.db.collection(DB_COLLECTION.HASHTAGS)
+  }
+
+  get bookmarks(): Collection<Bookmark> {
+    return this.db.collection(DB_COLLECTION.BOOKMARKS)
   }
 }
 
