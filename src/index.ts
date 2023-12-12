@@ -13,6 +13,7 @@ import bookmarksRouter from './routes/bookmarks.routes'
 import staticRouter from './routes/static.routes'
 import { UPLOAD_VIDEO_DIR } from './constants/dir'
 import cors from 'cors'
+import likesRouter from './routes/likes.routes'
 
 databaseService.connect().then(() => {
   databaseService.indexUsers()
@@ -33,6 +34,7 @@ app.use('/users', usersRouter)
 app.use('/media', mediaRouter)
 app.use('/tweets', tweetsRouter)
 app.use('/bookmarks', bookmarksRouter)
+app.use('/likes', likesRouter)
 app.use('/static', staticRouter)
 app.use('/static/video', express.static(UPLOAD_VIDEO_DIR))
 

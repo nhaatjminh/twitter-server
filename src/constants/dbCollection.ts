@@ -5,7 +5,8 @@ const DB_COLLECTION = {
   FOLLOWERS: 'followers',
   VIDEO_STATUS: 'video_status',
   HASHTAGS: 'hashtags',
-  BOOKMARKS: 'bookmarks'
+  BOOKMARKS: 'bookmarks',
+  LIKES: 'likes'
 }
 
 export default DB_COLLECTION
