@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
 import { UserVerifyStatus } from '~/constants/enums'
@@ -196,4 +196,13 @@ export const changePasswordController = async (
   const { password } = req.body
   const result = await usersService.changePassword(user_id, password)
   return res.json(result)
+}
+
+export const userLoggedInValidator = (middlware: (req: Request, res: Response, next: NextFunction) => void) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (req.headers.authorization) {
+      return middlware(req, res, next)
+    }
+    next()
+  }
 }
